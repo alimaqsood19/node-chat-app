@@ -19,9 +19,19 @@ io.on('connection', (socket) => { //socket is the individual connection, so upon
     //'connection' a paramter socket is also passed through 
     console.log("New user connected");
 
+    socket.emit('newMessage', {
+        from: 'Boob@hotmail.com',
+        text: 'Hello there dude',
+        createdAt: 123
+    });
+
+    socket.on('createMessage', (message) => {
+        console.log('Create message', message);
+    });
+
     socket.on('disconnect', () => {
         console.log("User was disconnected");
-    })
+    });
 });
 
 server.listen(port, () => {
