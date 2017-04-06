@@ -30,7 +30,29 @@
         }
 
         li {
-            text-align: center;
+            list-style-type: none;
+        }
+
+        #send-location {
+            margin-top: 20px;
+        }
+
+        #messages {
+            box-shadow: 0 1px 6px rgba(0,0,0,0.175);
+            border: 1px solid #d4d4d4;
+            border-radius: 5px;
+            width: 50%;
+            margin: 0 auto;
+            padding-bottom: 100px;
+            margin-bottom: 20px;
+            margin-top: 20px;
+        }
+
+        #geolocation {
+            width: 50%;
+            margin: 0 auto;
+            margin-top: 20px;
+            display: none;
         }
 
 
@@ -41,9 +63,9 @@
           <div class="row">
         <h1>Welcome to the chat app</h1>
 
-        <ol id="messages"></ol>
-
-
+        <div id="messages">
+        <ol></ol>
+        </div>
     <form id="message-form">
   <div class="form-group">
     <label for="exampleTextarea">Message</label>
@@ -51,6 +73,10 @@
   </div>
   <button type="submit" class="btn btn-primary">Send</button>
 </form>
+    <button id="send-location" type="submit" class="btn btn-primary">Send Location</button>
+    <div id="geolocation" class="alert alert-danger">
+  <strong>Error!</strong> Geolocation not supported by your browser.
+    </div>
 </div>
 </div>
 
