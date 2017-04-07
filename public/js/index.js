@@ -10,25 +10,42 @@ socket.on('disconnect', function () {
 
 socket.on('newMessage', function (message) {
     var formattedTime = moment(message.createdAt).format('h:mm a');
-    //can call moment method since its loaded in index.html 
+    var template = $('#message-template').html();
+    var html = Mustache.render(template, {
+        text: message.text,
+        from: message.from,
+        createdAt: formattedTime
+    }); //Mustache method that renders the template on clientside
 
-    console.log('newMessage', message);
-    var li = $('<li></li>');
-    li.text(`${message.from} ${formattedTime}: ${message.text} `);
+    $('#messages').append(html); //outputs the injected value
 
-    $('#messages').append(li)
+    // //can call moment method since its loaded in index.html 
+    // console.log('newMessage', message);
+    // var li = $('<li></li>');
+    // li.text(`${message.from} ${formattedTime}: ${message.text} `);
+    // $('#messages').append(li)
 });
 
 socket.on('newLocationMessage', function (message) {
     var formattedTime = moment(message.createdAt).format('h:mm a');
-    var li = $('<li></li>');
-    var a = $('<a target="_blank">My Current Location</a>')
+    var template = $('#location-message-template').html(); //grabs inner html of that selector
+    var html = Mustache.render(template, { //All the data that you want rendered 
+        from: message.from,
+        url: message.url,
+        createdAt: formattedTime
+    });
 
-    li.text(`${message.from} ${formattedTime}: `);
-    a.attr('href', message.url);
-    li.append(a); //adds the anchor right after the text we just set
+    $('#messages').append(html);
 
-    $('#messages').append(li);
+
+    // var li = $('<li></li>');
+    // var a = $('<a target="_blank">My Current Location</a>')
+
+    // li.text(`${message.from} ${formattedTime}: `);
+    // a.attr('href', message.url);
+    // li.append(a); //adds the anchor right after the text we just set
+
+    // $('#messages').append(li);
 });
 
 // socket.emit('createMessage', {
