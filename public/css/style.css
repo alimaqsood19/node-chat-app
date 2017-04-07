@@ -1,0 +1,47 @@
+
+    .row{
+        display: block;
+
+    }
+
+        .container {
+            padding-top: 20px;
+            padding-bottom: 20px;
+            text-align: center;
+
+        }
+
+        #message-form {
+
+            width:50%;
+            margin: 0 auto;
+
+        }
+
+        li {
+            list-style-type: none;
+        }
+
+        #send-location {
+            margin-top: 20px;
+        }
+
+        #messages {
+            box-shadow: 0 1px 6px rgba(0,0,0,0.175);
+            border: 1px solid #d4d4d4;
+            border-radius: 5px;
+            width: 50%;
+            margin: 0 auto;
+            padding-bottom: 100px;
+            margin-bottom: 20px;
+            margin-top: 20px;
+        }
+
+        #geolocation {
+            width: 50%;
+            margin: 0 auto;
+            margin-top: 20px;
+            display: none;
+        }
+
+

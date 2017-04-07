@@ -31,7 +31,7 @@ io.on('connection', (socket) => { //socket is the individual connection, so upon
         //when client emits createMessage event, displays message to server 
         io.emit('newMessage', generateMessage(message.from, message.text)); //emits to all connections //socket.emit emits to a single connection
              //this will be heard on all open client connections 
-        callback('This is from the server.'); //sends an event back to the front end client which lets the callback function execute on the client side
+        callback(); //sends an event back to the front end client which lets the callback function execute on the client side
             
         // socket.broadcast.emit('newMessage', { //broadcast does not emit the message to the same client but rather every other client
         //     from: message.from,

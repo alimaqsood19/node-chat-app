@@ -39,27 +39,33 @@ socket.on('newLocationMessage', function (message) {
 $('#message-form').on('submit', function(event) {
     event.preventDefault();
 
+    var messageTextbox = $('[name=message');
+
     socket.emit('createMessage', {
         from: 'User',
-        text: $('#message').val()
-    }, function() {
-
+        text: messageTextbox.val()
+    }, function() { //Event Acknowledgement, the return is just an empty string to clear the message box 
+        messageTextbox.val('')
     });
 });
 
-$('#send-location').on('click', function() {
-    if (!navigator.geolocation) {
-        $('#geolocation').css("display","block")
-    }
-    
-    navigator.geolocation.getCurrentPosition(function(position) {
-        socket.emit('createLocationMessage', {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude
-        });
-    }, function(err) {
-        $('#geolocation').css('display', 'block');
-        $('#geolocation').text('Unable to fetch location');
-        console.log(err);
-    })
+var locationButton = $('#send-location');
+locationButton.on('click', function () {
+  if (!navigator.geolocation) {
+    return alert('Geolocation not supported by your browser.');
+  }
+
+  locationButton.attr('disabled', 'disabled').text('Sending location...');
+
+  navigator.geolocation.getCurrentPosition(function (position) {
+    locationButton.removeAttr('disabled').text('Send location');
+    socket.emit('createLocationMessage', {
+      latitude: position.coords.latitude,
+      longitude: position.coords.longitude
+    });
+  }, function (err) {
+    locationButton.removeAttr('disabled').text('Send location');
+    alert('Unable to fetch location.');
+    console.log(err);
+  });
 });
