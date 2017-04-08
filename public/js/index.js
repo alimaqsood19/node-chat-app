@@ -1,5 +1,21 @@
 var socket = io();
 
+function scrollToBottom () {
+    // Selectors
+    var messages = $('#messages');
+    var newMessage = messages.children('li:last-child') //last item in the list to grab its height
+    //Heights
+    var clientHeight = messages.prop('clientHeight');
+    var scrollTop = messages.prop('scrollTop');
+    var scrollHeight = messages.prop('scrollHeight');
+    var newMessageHeight = newMessage.innerHeight(); //height of most recent messages height 
+    var lastMessageHeight = newMessage.prev().innerHeight(); //Second to last message
+
+    if (clientHeight + scrollTop + newMessageHeight + lastMessageHeight >= scrollHeight) {
+        messages.scrollTop(scrollHeight); //scrollTop jqeury method for scrollTop value, scrollHeight is the total height 
+    }
+}
+
 socket.on('connect', function () {
     console.log('Connected to server');
 });
@@ -18,7 +34,7 @@ socket.on('newMessage', function (message) {
     }); //Mustache method that renders the template on clientside
 
     $('#messages').append(html); //outputs the injected value
-
+    scrollToBottom();
     // //can call moment method since its loaded in index.html 
     // console.log('newMessage', message);
     // var li = $('<li></li>');
@@ -36,7 +52,7 @@ socket.on('newLocationMessage', function (message) {
     });
 
     $('#messages').append(html);
-
+    scrollToBottom();
 
     // var li = $('<li></li>');
     // var a = $('<a target="_blank">My Current Location</a>')
