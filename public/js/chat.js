@@ -5,14 +5,15 @@ function scrollToBottom () {
     var messages = $('#messages');
     var newMessage = messages.children('li:last-child') //last item in the list to grab its height
     //Heights
-    var clientHeight = messages.prop('clientHeight');
-    var scrollTop = messages.prop('scrollTop');
-    var scrollHeight = messages.prop('scrollHeight');
+    var clientHeight = messages.prop('clientHeight'); //visible height container
+    var scrollTop = messages.prop('scrollTop'); //number of pixels we scrolled down 
+    var scrollHeight = messages.prop('scrollHeight'); //entire height of messages container, regardless of what is visible to client
     var newMessageHeight = newMessage.innerHeight(); //height of most recent messages height 
     var lastMessageHeight = newMessage.prev().innerHeight(); //Second to last message
 
     if (clientHeight + scrollTop + newMessageHeight + lastMessageHeight >= scrollHeight) {
-        messages.scrollTop(scrollHeight); //scrollTop jqeury method for scrollTop value, scrollHeight is the total height 
+        //means if the client/user is close to the bottom of the scroll then we should auto scroll them down with each new message
+         messages.animate({scrollTop:scrollHeight}, 500); //scrollTop jqeury method for scrollTop value, scrollHeight is the total height 
     }
 }
 
