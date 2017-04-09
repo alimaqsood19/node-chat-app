@@ -24,7 +24,6 @@ app.use(express.static(publicPath));
 
 io.on('connection', (socket) => { //socket is the individual connection, so upon the event emitter
     //'connection' a paramter socket is also passed through 
-    console.log("New user connected");
 
     socket.on('join', (params, callback) => {
         if (!isRealString(params.name) || (!isRealString(params.room))) {
@@ -42,7 +41,7 @@ io.on('connection', (socket) => { //socket is the individual connection, so upon
         io.to(params.room).emit('updateUserList', users.getUserList(params.room));
         //emits to the specified room, a list of Users currently in room 
 
-        socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'));
+        socket.emit('newMessage', generateMessage('Admin', `Welcome to the chat app, you are in room '${params.room}'`));
         //upon user connecting, emits the event newMessage which is picked up by client and displayed
         socket.broadcast.to(params.room).emit('newMessage', generateMessage('Admin', `${params.name} has joined`));
         //broadcast does not send to the individual client, but every other connection
@@ -51,10 +50,15 @@ io.on('connection', (socket) => { //socket is the individual connection, so upon
     });//so if its valid we dont want to pass any errors back 
 
     socket.on('createMessage', (message, callback) => { 
-        console.log('Create message', message);
-        //when client emits createMessage event, displays message to server 
-        io.emit('newMessage', generateMessage(message.from, message.text)); //emits to all connections //socket.emit emits to a single connection
+        var user = users.getUser(socket.id)
+
+        if (user && isRealString(message.text)) {
+            //when client emits createMessage event, displays message to server 
+        io.to(user.room).emit('newMessage', generateMessage(user.name, message.text)); //emits to all connections //socket.emit emits to a single connection
              //this will be heard on all open client connections 
+        }
+
+        
         callback(); //sends an event back to the front end client which lets the callback function execute on the client side
             
         // socket.broadcast.emit('newMessage', { //broadcast does not emit the message to the same client but rather every other client
@@ -65,11 +69,14 @@ io.on('connection', (socket) => { //socket is the individual connection, so upon
     });
 
     socket.on('createLocationMessage', (coords) => {
-        io.emit('newLocationMessage', generateLocationMessage('Admin', coords.latitude, coords.longitude))
+        var user = users.getUser(socket.id);
+        if (user) {
+            io.to(user.room).emit('newLocationMessage', generateLocationMessage(user.name, coords.latitude, coords.longitude))
+        }
+        
     });
 
     socket.on('disconnect', () => {
-        console.log('User was disconnected');
         var user = users.removeUser(socket.id);
         //if someone was removed then update the current Users array and emit who left  
         if (user) {

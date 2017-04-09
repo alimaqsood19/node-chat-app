@@ -97,9 +97,9 @@ $('#message-form').on('submit', function(event) {
     event.preventDefault();
 
     var messageTextbox = $('[name=message');
+    var params = $.deparam(window.location.search);
 
     socket.emit('createMessage', {
-        from: 'User',
         text: messageTextbox.val()
     }, function() { //Event Acknowledgement, the return is just an empty string to clear the message box 
         messageTextbox.val('')
