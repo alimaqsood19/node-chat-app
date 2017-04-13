@@ -34,6 +34,10 @@ socket.on('disconnect', function () {
     console.log('Disconnected from server');
 });
 
+socket.on('processHandled', function(message) {
+    console.log(message);
+});
+
 socket.on('updateUserList', function (users) {
     console.log('Users list', users);
     var ol = $('<ol></ol>');

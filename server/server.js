@@ -2,6 +2,7 @@ const path = require('path');
 const http = require('http');
 const express = require('express');
 const socketIO = require('socket.io');
+const pid = process.pid; 
 
 const {generateMessage} = require('./utils/message.js');
 const {generateLocationMessage} = require('./utils/message.js');
@@ -40,7 +41,9 @@ io.on('connection', (socket) => { //socket is the individual connection, so upon
 
         io.to(params.room).emit('updateUserList', users.getUserList(params.room));
         //emits to the specified room, a list of Users currently in room 
-
+        
+        io.to(params.room).emit('processHandled', `Handled by process ${pid}`);
+        //Handled by process
         socket.emit('newMessage', generateMessage('Admin', `Welcome to the chat app, you are in room '${params.room}'`));
         //upon user connecting, emits the event newMessage which is picked up by client and displayed
         socket.broadcast.to(params.room).emit('newMessage', generateMessage('Admin', `${params.name} has joined`));
@@ -57,8 +60,6 @@ io.on('connection', (socket) => { //socket is the individual connection, so upon
         io.to(user.room).emit('newMessage', generateMessage(user.name, message.text)); //emits to all connections //socket.emit emits to a single connection
              //this will be heard on all open client connections 
         }
-
-        
         callback(); //sends an event back to the front end client which lets the callback function execute on the client side
             
         // socket.broadcast.emit('newMessage', { //broadcast does not emit the message to the same client but rather every other client
@@ -87,5 +88,5 @@ io.on('connection', (socket) => { //socket is the individual connection, so upon
 });
 
 server.listen(port, () => {
-    console.log(`Server is up on port ${port}`);
+    console.log(`Server is up on port ${port} \n Started process ${pid}`);
 });
